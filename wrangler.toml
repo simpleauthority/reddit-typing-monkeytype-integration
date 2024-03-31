@@ -4,7 +4,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 REDDIT_CLIENT_ID = "dMqeXSkJkJy2zrYY5NTWmw"
-REDDIT_REDIRECT_URI = "http://localho.st:3000/api/auth/callback"
+REDDIT_REDIRECT_URI = "https://typing-monkeytype-integration.pages.dev/api/auth/callback"
 
 [[d1_databases]]
 binding = "DB"
