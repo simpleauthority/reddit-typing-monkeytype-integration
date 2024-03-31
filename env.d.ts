@@ -2,4 +2,8 @@
 // by running `wrangler types --env-interface CloudflareEnv env.d.ts`
 
 interface CloudflareEnv {
+  DB: D1Database,
+  REDDIT_CLIENT_ID: string,
+  REDDIT_CLIENT_SECRET: string,
+  REDDIT_REDIRECT_URI: string
 }

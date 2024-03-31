@@ -13,9 +13,13 @@
     "build-cf-types": "wrangler types --env-interface CloudflareEnv env.d.ts"
   },
   "dependencies": {
+    "@lucia-auth/adapter-sqlite": "^3.0.1",
+    "arctic": "^1.5.0",
+    "lucia": "^3.1.1",
+    "next": "14.1.0",
+    "oslo": "^1.2.0",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.1.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "1",
