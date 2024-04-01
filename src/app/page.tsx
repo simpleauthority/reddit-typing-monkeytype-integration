@@ -174,7 +174,7 @@ export default async function Home() {
                 <li>The third option down in this section is &quot;ape keys&quot;. Click &quot;open&quot;.</li>
                 <li>Click &quot;Generate new key&quot; and give it a name you will remember (like &quot;typing_subreddit&quot;), then click &quot;generate&quot;.</li>
                 <li>Copy your Ape Key. You will only see it <strong>one time</strong>! Then, click &quot;close&quot;.</li>
-                <li>Click &quot;open&quot; next to &quot;ape keys&quot; again. In the Ape Keys screen, check the &quot;active&quot; checkbox next to the key's name.</li>
+                <li>Click &quot;open&quot; next to &quot;ape keys&quot; again. In the Ape Keys screen, check the &quot;active&quot; checkbox next to the key&apos;s name.</li>
                 <li>Come back here and paste your Ape Key in the box above, then press &quot;Update&quot;. We will then use your Ape Key to get your leaderboard results.</li>
               </ol>
             </div>

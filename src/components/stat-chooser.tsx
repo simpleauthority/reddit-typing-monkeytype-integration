@@ -67,7 +67,7 @@ export default function StatChooser({ user, stats }: { user: User, stats: StatsR
   } else {
     const error = stats.error ? <span>(Error: {stats.error})</span> : <></>
     dom = <div className="col-span-3">
-      <p>We couldn't fetch your stats from MonkeyType. Is your key correct? {error}</p>
+      <p>We couldn&apos;t fetch your stats from MonkeyType. Is your key correct? {error}</p>
     </div>
   }
 
