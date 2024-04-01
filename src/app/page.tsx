@@ -3,21 +3,15 @@ import Header from "@/components/header";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import { revalidatePath } from "next/cache";
 
+import StatsResult from "@/types/stats-result";
+import Stats from "@/types/stats";
+import Errable from "@/types/errable";
+import StatChooser from "@/components/stat-chooser";
+import { Cog6ToothIcon } from "@heroicons/react/24/solid";
+
 export const runtime = 'edge'
 
-interface PersonalBests {
-  acc: number,
-  consistency: number,
-  difficulty: string,
-  lazyMode: boolean,
-  language: string,
-  punctuation: boolean,
-  raw: number,
-  wpm: number,
-  timestamp: number
-}
-
-async function setApeKey(id: string, data: FormData): Promise<{ error: string | null }> {
+async function setApeKey(id: string, data: FormData): Promise<Errable> {
   'use server'
 
   const key = data.get("ape_key")
@@ -30,6 +24,27 @@ async function setApeKey(id: string, data: FormData): Promise<{ error: string | 
   const db = getRequestContext().env.DB
   const res = await db.prepare("UPDATE user SET monkeytype_apekey = ? WHERE id = ?")
     .bind(key, id)
+    .run()
+
+  if (!res.success) {
+    return {
+      error: 'Failed to execute query'
+    }
+  }
+
+  revalidatePath("/")
+
+  return {
+    error: null
+  }
+}
+
+async function deleteApeKey(id: string): Promise<Errable> {
+  'use server'
+
+  const db = getRequestContext().env.DB
+  const res = await db.prepare("UPDATE user SET monkeytype_apekey = null WHERE id = ?")
+    .bind(id)
     .run()
 
   if (!res.success) {
@@ -60,7 +75,7 @@ async function getCurrentApeKey(id: string): Promise<string | null> {
   return key["monkeytype_apekey"] as string
 }
 
-async function getMonkeyTypeStats(key: string | null): Promise<{ stats: PersonalBests[] | null, error: string | null }> {
+async function getMonkeyTypeStats(key: string | null): Promise<StatsResult> {
   if (!key) {
     return {
       stats: null,
@@ -69,7 +84,7 @@ async function getMonkeyTypeStats(key: string | null): Promise<{ stats: Personal
   }
 
   const resp = await fetch(
-    "https://api.monkeytype.com/users/personalBests?mode=time&mode2=60",
+    "https://api.monkeytype.com/users/personalBests?mode=time",
     {
       headers: {
         Authorization: `ApeKey ${key}`
@@ -78,13 +93,27 @@ async function getMonkeyTypeStats(key: string | null): Promise<{ stats: Personal
   )
 
   if (!resp.ok) {
+    if (resp.status === 470) {
+      return {
+        stats: null,
+        error: "Could not retrieve your stats: Ape Key is invalid. Check your provided Ape Key."
+      }
+    } else if (resp.status === 471) {
+      return {
+        stats: null,
+        error: "Could not retrieve your stats: Ape Key is inactive. Set the Ape Key to active in MonkeyType settings."
+      }
+    }
+
+    const errorData = await resp.json() as any
+
     return {
       stats: null,
-      error: "Failed to retrieve your stats"
+      error: `An unknown error occurred while trying to retrieve your stats: ${errorData.message}.`
     }
   }
 
-  const stats = (await resp.json() as any)['data'] as PersonalBests[]
+  const stats = (await resp.json() as any)['data'] as Stats
 
   return {
     stats,
@@ -100,13 +129,26 @@ export default async function Home() {
     const stats = await getMonkeyTypeStats(key)
 
     const setApeKeyWithId = setApeKey.bind(null, user.id)
+    const deleteApeKeyWithId = deleteApeKey.bind(null, user.id)
 
     return <>
       <Header user={user} />
       <div className="pt-6">
         <dl className="divide-y divide-gray-100">
           <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">Ape Key</dt>
+            <dt className="text-sm font-medium leading-6 text-gray-900">
+              Ape Key
+              { key ? <>
+                <p className="pt-2 text-xs">Click below and we will forget your Ape Key.</p>
+                <form action={deleteApeKeyWithId}>
+                  <span>
+                    <button className="rounded-md bg-white font-medium text-red-600 hover:text-red-500">
+                      Delete
+                    </button>
+                  </span>
+                </form>
+              </> : <></> }
+            </dt>
             <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
               <form className="flex" action={setApeKeyWithId}>
                 <span className="flex-grow">
@@ -120,35 +162,32 @@ export default async function Home() {
               </form>
             </dd>
           </div>
-          {stats.stats ? <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-            <dt className="text-sm font-medium leading-6 text-gray-900">Flair Choices</dt>
-            <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-              <div>
-                <fieldset>
-                  <legend className="sr-only">Flair choices</legend>
-                  <div className="space-y-4">
-                    {stats.stats.map(stat => (
-                      <div key={stat.language} className="flex items-center">
-                        <input
-                          id={stat.language}
-                          name="flair-choice"
-                          type="radio"
-                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                        <label className="ml-3 block text-sm font-medium leading-6 text-gray-900">
-                          <p>{stat.language}/r:{stat.raw}/w:{stat.wpm}/a:{stat.acc}/c:{stat.consistency}</p>
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </fieldset>
-              </div>
-            </dd>
-          </div> : <></>}
+          {key ? 
+            <StatChooser user={user} stats={stats} /> :
+            <div className="px-4 py-6 sm:px-0 space-y-2">
+              <p>To get your MonkeyType stats, we need your Ape Key. This key lets us query your MonkeyType account and determine your personal leaderboard scores.</p>
+              <p>To find it, please follow these steps:</p>
+              <ol className="list-decimal list-inside py-2 space-y-2">
+                <li>Go to <a className="text-blue-600 hover:text-blue-400" href="https://monkeytype.com" target="_blank">MonkeyType</a> (this will open in a new window).</li>
+                <li>Click the settings icon (looks like this: <Cog6ToothIcon className="inline-block h-8 w-8"></Cog6ToothIcon>).</li>
+                <li>In the menu at the top of the settings page, click "danger zone".</li>
+                <li>The third option down in this section is "ape keys". Click "open".</li>
+                <li>Click "Generate new key" and give it a name you will remember (like "typing_subreddit"), then click "generate".</li>
+                <li>Copy your Ape Key. You will only see it <strong>one time</strong>! Then, click "close".</li>
+                <li>Click "open" next to "ape keys" again. In the Ape Keys screen, check the "active" checkbox next to the key's name.</li>
+                <li>Come back here and paste your Ape Key in the box above, then press "Update". We will then use your Ape Key to get your leaderboard results.</li>
+              </ol>
+            </div>
+          }
         </dl>
       </div>
     </>
   } else {
-    return <Header />
+    return <>
+      <Header />
+      <div className="pt-6">
+        <p>You are not logged in. Please sign in with Reddit using the top-right button. We need this so that we can verify your Reddit username and associate it with your chosen flair.</p>
+      </div>
+    </>
   }
 }

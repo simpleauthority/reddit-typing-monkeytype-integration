@@ -2,7 +2,6 @@ import { initializeLucia, createReddit } from "@/auth";
 import { getRequestContext } from "@cloudflare/next-on-pages"
 import { cookies } from "next/headers";
 import { generateId } from "lucia";
-import { OAuth2RequestError } from "arctic";
 
 export const runtime = 'edge'
 
@@ -17,7 +16,7 @@ export async function GET(request: Request): Promise<Response> {
     })
   }
 
-  try {
+  // try {
     const tokens = await createReddit().validateAuthorizationCode(code)
     const redditUserResponse = await fetch("https://oauth.reddit.com/api/v1/me", {
       headers: {
@@ -66,17 +65,17 @@ export async function GET(request: Request): Promise<Response> {
         Location: "/"
       }
     })
-  } catch (e) {
-    if (e instanceof OAuth2RequestError) {
-      return new Response(null, {
-        status: 400
-      })
-    }
+  // } catch (e) {
+  //   if (e instanceof OAuth2RequestError) {
+  //     return new Response(null, {
+  //       status: 400
+  //     })
+  //   }
 
-    return new Response(JSON.stringify({"error": `Encountered error: ${e}`}), {
-      status: 500
-    })
-  }
+  //   return new Response(JSON.stringify({"error": `Encountered error: ${e}`}), {
+  //     status: 500
+  //   })
+  // }
 }
 
 interface UserRecord {

@@ -7,7 +7,7 @@ export const runtime = 'edge'
 export async function GET(): Promise<Response> {
   const state = generateState()
 
-  let url = await createReddit().createAuthorizationURL(state, { scopes: ["identity", "flair"] })
+  let url = await createReddit().createAuthorizationURL(state, { scopes: ["identity"] })
   url.searchParams.set("duration", "permanent")
   
   cookies().set("reddit_oauth_state", state, {

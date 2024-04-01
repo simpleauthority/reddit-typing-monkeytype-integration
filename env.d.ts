@@ -3,7 +3,12 @@
 
 interface CloudflareEnv {
   DB: D1Database,
+  KV: KVNamespace,
   REDDIT_CLIENT_ID: string,
   REDDIT_CLIENT_SECRET: string,
-  REDDIT_REDIRECT_URI: string
+  REDDIT_REDIRECT_URI: string,
+  REDDIT_BOT_USERNAME: string,
+  REDDIT_BOT_PASSWORD: string,
+  REDDIT_BOT_CLIENT_ID: string,
+  REDDIT_BOT_CLIENT_SECRET: string
 }
