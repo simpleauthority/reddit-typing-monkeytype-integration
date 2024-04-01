@@ -170,12 +170,12 @@ export default async function Home() {
               <ol className="list-decimal list-inside py-2 space-y-2">
                 <li>Go to <a className="text-blue-600 hover:text-blue-400" href="https://monkeytype.com" target="_blank">MonkeyType</a> (this will open in a new window).</li>
                 <li>Click the settings icon (looks like this: <Cog6ToothIcon className="inline-block h-8 w-8"></Cog6ToothIcon>).</li>
-                <li>In the menu at the top of the settings page, click "danger zone".</li>
-                <li>The third option down in this section is "ape keys". Click "open".</li>
-                <li>Click "Generate new key" and give it a name you will remember (like "typing_subreddit"), then click "generate".</li>
-                <li>Copy your Ape Key. You will only see it <strong>one time</strong>! Then, click "close".</li>
-                <li>Click "open" next to "ape keys" again. In the Ape Keys screen, check the "active" checkbox next to the key's name.</li>
-                <li>Come back here and paste your Ape Key in the box above, then press "Update". We will then use your Ape Key to get your leaderboard results.</li>
+                <li>In the menu at the top of the settings page, click &quot;danger zone&quot;.</li>
+                <li>The third option down in this section is &quot;ape keys&quot;. Click &quot;open&quot;.</li>
+                <li>Click &quot;Generate new key&quot; and give it a name you will remember (like &quot;typing_subreddit&quot;), then click &quot;generate&quot;.</li>
+                <li>Copy your Ape Key. You will only see it <strong>one time</strong>! Then, click &quot;close&quot;.</li>
+                <li>Click &quot;open&quot; next to &quot;ape keys&quot; again. In the Ape Keys screen, check the &quot;active&quot; checkbox next to the key's name.</li>
+                <li>Come back here and paste your Ape Key in the box above, then press &quot;Update&quot;. We will then use your Ape Key to get your leaderboard results.</li>
               </ol>
             </div>
           }
