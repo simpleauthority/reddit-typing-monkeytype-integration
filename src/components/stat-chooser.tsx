@@ -30,23 +30,27 @@ export default function StatChooser({ user, stats }: { user: User, stats: StatsR
                 <span className="flex-grow">
                   {Object.entries(stats.stats).map((entry) => {
                     const time = entry[0]
-                    const stat = entry[1][0]
 
-                    const flair = `${time}s :: ${stat.wpm}wpm :: ${stat.acc}% acc :: ${dayjs(stat.timestamp).format("MMM DD, YYYY")}`
+                    const choices = entry[1].map(choice => {
+                      const key = `${time}-${choice.language}`
+                      const flair = `${choice.language} :: ${time}s :: ${choice.wpm}wpm :: ${choice.acc}% acc`
 
-                    return <div key={time} className="flex items-center">
-                      <input
-                        id={time}
-                        name="flair-choice"
-                        value={flair}
-                        type="radio"
-                        className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        required
-                      />
-                      <label htmlFor={time} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
-                        <p>{flair}</p>
-                      </label>
-                    </div>
+                      return <div key={key} className="flex items-center">
+                        <input
+                          id={key}
+                          name="flair-choice"
+                          value={flair}
+                          type="radio"
+                          className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                          required
+                        />
+                        <label htmlFor={key} className="ml-3 block text-sm font-medium leading-6 text-gray-900">
+                          <p>{flair}</p>
+                        </label>
+                      </div>
+                    })
+
+                    return choices
                   })}
                 </span>
                 <span className="ml-4 flex-shrink-0">

@@ -5,10 +5,11 @@ import { getRequestContext } from "@cloudflare/next-on-pages"
 import * as base64 from 'base-64'
 
 async function fetchRedditToken(env: CloudflareEnv): Promise<string | null> {
-  const tokenResp = await fetch("https://www.reddit.com/api/v1/access_token", {
+  const tokenResp = await fetch("https://oauth.reddit.com/api/v1/access_token", {
     method: 'POST',
     headers: {
-      Authorization: 'Basic ' + base64.encode(`${env.REDDIT_BOT_CLIENT_ID}:${env.REDDIT_BOT_CLIENT_SECRET}`)
+      Authorization: 'Basic ' + base64.encode(`${env.REDDIT_BOT_CLIENT_ID}:${env.REDDIT_BOT_CLIENT_SECRET}`),
+      'User-Agent': 'RTypingBot/Indev by u/simpleauthority'
     },
     body: new URLSearchParams({
       grant_type: "password",
@@ -80,7 +81,8 @@ export default async function setRedditFlair(username: string, prevState: any, d
   const flairResp = await fetch(flairUrl, {
     method: 'POST',
     headers: {
-      Authorization: 'Bearer ' + token
+      Authorization: 'Bearer ' + token,
+      'User-Agent': 'RTypingBot/Indev by u/simpleauthority'
     }
   })
 
