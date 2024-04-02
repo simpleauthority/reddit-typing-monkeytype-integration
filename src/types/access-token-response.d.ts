@@ -1,4 +1,0 @@
-export default interface AccessTokenResponse {
-  access_token: string,
-  expires_in: number
-}

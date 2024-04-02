@@ -5,8 +5,6 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 REDDIT_CLIENT_ID = "dMqeXSkJkJy2zrYY5NTWmw"
 REDDIT_REDIRECT_URI = "https://typing-monkeytype-integration.pages.dev/api/auth/callback"
-REDDIT_BOT_USERNAME = "rtypingbot"
-REDDIT_BOT_CLIENT_ID = "MvVwECxh0kJbN3kQ4P1V4g"
 
 [[d1_databases]]
 binding = "DB"

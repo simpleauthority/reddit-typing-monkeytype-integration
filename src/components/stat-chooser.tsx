@@ -3,8 +3,6 @@
 import StatsResult from "@/types/stats-result"
 import { User } from "lucia"
 
-import dayjs from "dayjs"
-
 import setRedditFlair from "./set-reddit-flair"
 import { useFormState, useFormStatus } from "react-dom"
 

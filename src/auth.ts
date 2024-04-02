@@ -60,8 +60,7 @@ export function initializeLucia(D1: D1Database) {
     },
     getUserAttributes: (attributes: DatabaseUserAttributes) => {
       return {
-        reddit_username: attributes.reddit_username,
-        reddit_snoovatar: attributes.reddit_snoovatar
+        reddit_username: attributes.reddit_username
       }
     }
   })
@@ -76,13 +75,11 @@ declare module "lucia" {
 
   interface User {
     reddit_username: string;
-    reddit_snoovatar: string;
   }
 }
 
 interface DatabaseUserAttributes {
   reddit_username: string;
-  reddit_snoovatar: string;
 }
 
 export type UserSession = { user: User; session: Session } | { user: null; session: null }
