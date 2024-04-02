@@ -11,7 +11,7 @@ export default async function setRedditFlair(username: string, prevState: any, d
     }
   }
 
-  const token = await getRequestContext().env.KV.get("bartimus")
+  const token = await getRequestContext().env.KV.get("bot_token")
   if (!token) {
     return {
       message: '',
@@ -19,7 +19,7 @@ export default async function setRedditFlair(username: string, prevState: any, d
     }
   }
 
-  const flairUrl = "https://oauth.reddit.com/r/typingdev/api/flair?" + new URLSearchParams({
+  const flairUrl = "https://oauth.reddit.com/r/typing/api/flair?" + new URLSearchParams({
     api_type: "json",
     name: username,
     text: flair.toString()
